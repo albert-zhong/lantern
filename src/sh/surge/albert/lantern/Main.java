@@ -31,7 +31,7 @@ public class Main {
 
         LinearRegression line = new LinearRegression();
         line.train(points);
-        System.out.println(line.calculateSlope());
+        System.out.println(line.predict(12));
 
     }
 }
