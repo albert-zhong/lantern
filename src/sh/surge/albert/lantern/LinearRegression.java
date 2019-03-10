@@ -5,12 +5,17 @@ import java.awt.Point;
 
 public class LinearRegression {
 
-    private ArrayList<Point> points = new ArrayList<Point>();
+    private ArrayList<Point> points = new ArrayList<>();
     private double yIntercept;
     private double slope;
 
     public void train(ArrayList<Point> newPoints){
         points.addAll(newPoints); // Adds all new points to current points
+        calculateBestFit();
+    }
+
+    public void train(Point newPoint){
+        points.add(newPoint); // All a single new point to current points
         calculateBestFit();
     }
 
