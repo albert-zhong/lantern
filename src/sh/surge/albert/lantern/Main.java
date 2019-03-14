@@ -29,9 +29,9 @@ public class Main {
         points.add(p9);
         points.add(p10);
 
-        LinearRegression line = new LinearRegression();
-        line.train(points);
-        System.out.println(line.predict(12));
+        GradientDescent line = new GradientDescent();
+        line.addPoints(points);
+        line.train();
 
     }
 }
