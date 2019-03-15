@@ -8,25 +8,20 @@ public class GradientDescent {
     private ArrayList<Point> points = new ArrayList<>();
     private double bias = 0;
     private double slope = 0;
-    private double learningRate = 0.05;
+    private double learningRate = 0.02;
 
     public void addPoints(ArrayList<Point> newPoints){
         points.addAll(newPoints);
     }
 
     public void train(){
-        int counter = 0;
-        while(true) {
-            double tempBias = bias - learningRate * getPartialDerivativeOfBias();
-            double tempSlope = slope - learningRate * getPartialDerivativeOfSlope();
-            if (tempBias == bias && tempSlope == slope) { // Reached minimum
-                System.out.println("slope is " + slope + " and bias is " + bias);
-                System.out.println("took " + counter + " tries");
-                break;
-            }
+        for (int i=0; i<6000; i++){
+            double[] partialDerivatives = getPartialDerivatives();
+            double tempBias = bias - learningRate*partialDerivatives[0];
+            double tempSlope = slope - learningRate*partialDerivatives[1];
             bias = tempBias;
             slope = tempSlope;
-            counter++;
+            System.out.println("Slope = " + slope + ", Bias = " + bias);
         }
     }
 
@@ -38,20 +33,17 @@ public class GradientDescent {
         return loss / (2 * points.size());
     }
 
-    private double getPartialDerivativeOfBias(){
-        double sum = 0;
-        for (int i=0; i<points.size(); i++) {
-            sum += (predict(points.get(i).getX()) - points.get(i).getY());
+    private double[] getPartialDerivatives(){
+        double sum0 = 0;
+        double sum1 = 0;
+        for (int i=0; i<points.size(); i++){
+            double delta = predict(points.get(i).getX()) - points.get(i).getY();
+            sum0 += delta;
+            sum1 += delta*points.get(i).getX();
         }
-        return sum / points.size();
-    }
-
-    private double getPartialDerivativeOfSlope(){
-        double sum = 0;
-        for (int i=0; i<points.size(); i++) {
-            sum += ((predict(points.get(i).getX()) - points.get(i).getY())*points.get(i).getX());
-        }
-        return sum / points.size();
+        sum0 /= points.size();
+        sum1 /= points.size();
+        return new double[]{sum0, sum1};
     }
 
     public double predict(double x){
