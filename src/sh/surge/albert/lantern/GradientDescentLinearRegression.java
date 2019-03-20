@@ -1,27 +1,36 @@
 package sh.surge.albert.lantern;
 
 import java.awt.*;
+import java.math.RoundingMode;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 
-public class GradientDescent {
+public class GradientDescentLinearRegression {
 
     private ArrayList<Point> points = new ArrayList<>();
     private double bias = 0;
     private double slope = 0;
-    private double learningRate = 0.02;
+    private final double learningRate = 0.03;
+    private final double precision = 0.000001;
 
     public void addPoints(ArrayList<Point> newPoints){
         points.addAll(newPoints);
     }
 
     public void train(){
-        for (int i=0; i<6000; i++){
+        while (true){
             double[] partialDerivatives = getPartialDerivatives();
+            if (Math.abs(partialDerivatives[0]) < precision && Math.abs(partialDerivatives[1]) < precision) {
+                slope = round(slope, 6);
+                bias = round(bias, 6);
+                System.out.println("Slope = " + slope + ", Bias = " + bias);
+                break;
+            }
             double tempBias = bias - learningRate*partialDerivatives[0];
             double tempSlope = slope - learningRate*partialDerivatives[1];
             bias = tempBias;
             slope = tempSlope;
-            System.out.println("Slope = " + slope + ", Bias = " + bias);
+
         }
     }
 
@@ -56,6 +65,21 @@ public class GradientDescent {
 
     public double getYIntercept(){
         return bias;
+    }
+
+    private double round(double number, int decimalPlace) {
+        if (decimalPlace < 1) {
+            throw new IllegalArgumentException("Must round to at least one decimal place!");
+        }
+
+        StringBuilder pattern = new StringBuilder("#.");
+        for (int i=0; i<decimalPlace; i++) {
+            pattern.append("#");
+        }
+        DecimalFormat df = new DecimalFormat(pattern.toString());
+        df.setRoundingMode(RoundingMode.HALF_UP);
+
+        return Double.valueOf(df.format(number));
     }
 
     public String toString(){

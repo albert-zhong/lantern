@@ -3,7 +3,7 @@ package sh.surge.albert.lantern;
 import java.util.ArrayList;
 import java.awt.Point;
 
-public class LinearRegression {
+public class AutomaticLinearFit {
 
     private ArrayList<Point> points = new ArrayList<>();
     private double yIntercept;

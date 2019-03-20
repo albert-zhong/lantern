@@ -29,7 +29,7 @@ public class Main {
         points.add(p9);
         points.add(p10);
 
-        GradientDescent line = new GradientDescent();
+        GradientDescentLinearRegression line = new GradientDescentLinearRegression();
         line.addPoints(points);
         line.train();
 
