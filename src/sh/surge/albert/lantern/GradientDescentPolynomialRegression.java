@@ -7,7 +7,12 @@ import java.util.ArrayList;
 
 public class GradientDescentPolynomialRegression {
 
-    public GradientDescentPolynomialRegression(int degree){
+    public GradientDescentPolynomialRegression(int degree, int decimalPlacePrecision){
+        if (decimalPlacePrecision < 3) {
+            throw new IllegalArgumentException("Precision must be at least 3!");
+        }
+        this.decimalPlacePrecision = decimalPlacePrecision;
+
         numberOfParameters = degree + 1;
         parameters = new double[numberOfParameters];
 
@@ -20,8 +25,8 @@ public class GradientDescentPolynomialRegression {
     private double[] parameters;
     private ArrayList<Point> points = new ArrayList<>();
 
-    private final double learningRate = 0.002;
-    private final double precision = 0.000001;
+    private final double learningRate = 0.01;
+    private int decimalPlacePrecision;
 
     public void addPoints(ArrayList<Point> newPoints){
         points.addAll(newPoints);
@@ -34,6 +39,7 @@ public class GradientDescentPolynomialRegression {
 
             if (isConverged(partialDerivatives)) {
                 finish();
+                System.out.println("");
                 System.out.println("Took " + i + " tries!");
                 break;
             }
@@ -87,8 +93,10 @@ public class GradientDescentPolynomialRegression {
     }
 
     private boolean isConverged(double[] numbers) {
+        double absolutePrecision = 1/Math.pow(10, decimalPlacePrecision);
+
         for (int i=0; i<numbers.length; i++) {
-            if (Math.abs(numbers[i]) > precision) {
+            if (Math.abs(numbers[i]) > absolutePrecision) {
                 return false;
             }
         }
@@ -97,11 +105,10 @@ public class GradientDescentPolynomialRegression {
 
     private void finish(){ // Rounds parameters and prints results
         for (int i=0; i<parameters.length; i++){
-            parameters[i] = round(parameters[i], 4);
+            parameters[i] = round(parameters[i], decimalPlacePrecision-2);
         }
         show();
     }
-
 
     private double round(double number, int decimalPlace) {
         if (decimalPlace < 1) {
@@ -117,5 +124,4 @@ public class GradientDescentPolynomialRegression {
 
         return Double.valueOf(df.format(number));
     }
-
 }
